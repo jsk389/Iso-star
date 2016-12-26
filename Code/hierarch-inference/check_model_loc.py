@@ -1,20 +1,13 @@
-#!/usr/bin/python 
+#!/usr/bin/python
 
 from __future__ import division
 from __future__ import print_function
 
-import emcee
-import math
-import shutil
-import os
 import matplotlib.pyplot as pl
 import numpy as np
-import scipy.stats
 import sys
-import corner
-import gc
-from scipy import interpolate
-from scipy import integrate
+
+from scipy import interpolate, integrate
 from scipy.integrate import quad
 from sini_inference_fns_mod import cosi_integrand, fisher_integrand, sine_fisher_integrand, cosine_integrand, cosine_fisher_integrand
 
@@ -55,7 +48,7 @@ def model(theta, p):
     """
     kappa, mu = p
     if kappa == 0.0:
-        mod = np.sin(theta)       
+        mod = np.sin(theta)
         norm = quad(fisher_integrand, 0, np.pi/2.0, args=(kappa, mu))[0]
         return mod / norm
     else:
@@ -86,16 +79,16 @@ if __name__=="__main__":
     mu = [np.pi/2.0]
     fish = np.zeros([N, len(kappa)])
     cos_fish = np.zeros([N, len(kappa)])
-    color=['cyan', 'blue', 'green', 'red', 'magenta', 'orange', 'saddlebrown', 
+    color=['cyan', 'blue', 'green', 'red', 'magenta', 'orange', 'saddlebrown',
            'olive', 'gold']
     for i in range(len(kappa)):
         for j in range(len(mu)):
-  
+
             fish[:,i] = inv_sampl(angles, model(angles, [kappa[i], mu[j]]), N)
             pl.plot(angles, model(angles, [kappa[i], mu[j]]))
             pl.hist(fish[:,i], bins=np.sqrt(N), normed=True, \
                     histtype='step', color=color[i], linewidth=2, \
-                    label=r'$\kappa$ = '+str(kappa[i])+'; $\mu$ = '+str(mu[j]))           
+                    label=r'$\kappa$ = '+str(kappa[i])+'; $\mu$ = '+str(mu[j]))
             pl.show()
             cos_fish[:,i] = np.cos(fish[:,i])
             pl.plot(np.cos(angles), cosine_fisher_pdf(np.cos(angles), [kappa[i], mu[j]]))
@@ -110,8 +103,8 @@ if __name__=="__main__":
     pl.xlabel(r'$\cos i$', fontsize=18)
     pl.legend(loc='best')
     pl.show()
- 
-    #kappa = [0.0, 0.5, 1.0, 2.0, 3.0, 4.0]    
+
+    #kappa = [0.0, 0.5, 1.0, 2.0, 3.0, 4.0]
     for i in range(len(kappa)):
         fish[:,i] = inv_sampl(angles, fisher(angles, kappa[i]), N)
         #pl.hist(fish[:,i], bins=np.sqrt(N), normed=True, \
@@ -125,5 +118,3 @@ if __name__=="__main__":
     pl.ylim([0,0.03])
     pl.legend(loc='best')
     pl.show()
-
-
