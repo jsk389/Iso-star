@@ -2,29 +2,15 @@
 
 from __future__ import division
 
-import pickle
-import pymultinest
-import json
-import emcee
-import math
-import shutil
-import os
-import FFT
-from REGGAE.extract_params_xml import extract
+import glob
 import matplotlib.pyplot as pl
 import numpy as np
+import os
 import scipy.stats
 import sys
-import sort_nicely
-import glob
-
-from useful_functions import flatten
-from run_analysis import hpd
 
 from plotutilities import *
-from pyqt_fit import kde, kde_methods
-
-import os
+from useful_functions import flatten
 
 def hpd(data, level) :
  	""" The Highest Posterior Density (credible) interval of data at 		"level" level.
